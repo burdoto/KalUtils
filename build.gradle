@@ -4,6 +4,9 @@ apply plugin: 'maven-publish'
 group 'de.kaleidox'
 version '1.0.0'
 
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
 task wrapper(type: Wrapper) {
   gradleVersion = '4.10.2'
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
@@ -21,6 +24,11 @@ repositories {
     jcenter()
 }
 
+dependencies {
+    implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.3'
+    implementation 'com.vdurmont:emoji-java:4.0.0'
+}
+
 allprojects {
     sourceSets {
         main {
@@ -30,5 +38,3 @@ allprojects {
         }
     }
 }
-
-sourceCompatibility = 1.8
