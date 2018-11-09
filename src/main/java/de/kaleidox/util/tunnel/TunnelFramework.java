@@ -19,12 +19,16 @@ public class TunnelFramework {
     }
 
     @SuppressWarnings("unchecked")
-    public void accept(Object base, Object result) {
-        List<TunnelSubscription> tunnelSubscriptions = subscriptions.get(base);
+    public void accept(Object result, Object... base) {
+        for (Object o : base) {
+            if (o != null) {
+                List<TunnelSubscription> tunnelSubscriptions = subscriptions.get(o);
 
-        for (TunnelSubscription tunnelSubscription : tunnelSubscriptions) {
-            if (tunnelSubscription.gettClass().isAssignableFrom(result.getClass()))
-                tunnelSubscription.getAcceptor().accept(result);
+                for (TunnelSubscription tunnelSubscription : tunnelSubscriptions) {
+                    if (tunnelSubscription.gettClass().isAssignableFrom(result.getClass()))
+                        tunnelSubscription.getAcceptor().accept(result);
+                }
+            }
         }
     }
 }
