@@ -6,6 +6,7 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
+import de.kaleidox.util.interfaces.JsonNodeable;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -20,6 +21,8 @@ public final class JsonHelper extends NullHelper {
             return JsonNodeFactory.instance.nullNode();
         } else if (of instanceof JsonNode) {
             return (JsonNode) of;
+        } else if (of instanceof JsonNodeable) {
+            return ((JsonNodeable) of).toJsonNode();
         } else if (of instanceof Collection) {
             //noinspection unchecked
             return arrayNode((Collection) of);
