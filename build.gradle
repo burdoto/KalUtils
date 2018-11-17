@@ -2,7 +2,7 @@ apply plugin: 'java-library'
 apply plugin: 'maven-publish'
 
 group 'de.kaleidox'
-version '1.0.0'
+version '1.0.0-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -12,11 +12,77 @@ task wrapper(type: Wrapper) {
   distributionUrl = "https://services.gradle.org/distributions/gradle-$gradleVersion-all.zip"
 }
 
+task sourcesJar(type: Jar) {
+    from sourceSets.main.allJava
+    classifier = "sources"
+}
+
 publishing {
+    repositories {
+        maven {
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            url = project.version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+            name = "Sonatype"
+
+            credentials {
+                def uName = ""
+                def passwd = ""
+                int r
+                def stream = new FileInputStream(new File("../sonatype-username.txt"))
+                while ((r = stream.read()) != -1) uName = (uName + (char)r)
+                stream = new FileInputStream(new File("../sonatype-password.txt"))
+                while ((r = stream.read()) != -1) passwd = (passwd + (char)r)
+
+                username uName
+                password passwd
+            }
+        }
+    }
+
     publications {
         mavenJava(MavenPublication) {
+            artifactId = 'kalutils'
             from components.java
+            
+            artifact sourcesJar
+
+            pom {
+                name = "KaleidoxUtils"
+                description = "Utilities for Kaleidox projects"
+                inceptionYear = '2018'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "burdoto"
+                        name = "Tobias Burdow"
+                        email = "burdoto@outlook.com"
+                    }
+                }
+
+                withXml {
+                    def xml = asNode()
+                    def repos = xml.appendNode("repositories")
+                    def repo = repos.appendNode("repository")
+                    repo.appendNode("id", "jitpack.io")
+                    repo.appendNode("url", "https://jitpack.io")
+                }
+            }
         }
+    }
+}
+
+if (project.hasProperty("signing.keyId")) {
+    apply plugin: 'signing'
+    signing {
+        sign publishing.publications.mavenJava
     }
 }
 
@@ -29,12 +95,10 @@ dependencies {
     implementation 'com.vdurmont:emoji-java:4.0.0'
 }
 
-allprojects {
-    sourceSets {
-        main {
-            java {
-                srcDirs = ["src\\main\\java"]
-            }
+sourceSets {
+    main {
+        java {
+            srcDirs = ["src\\main\\java"]
         }
     }
 }
