@@ -1,0 +1,74 @@
+apply plugin: 'maven-publish'
+apply plugin: 'signing'
+
+publishing {
+    repositories {
+        maven {
+            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
+            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
+            url = project.version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
+            name = "Sonatype"
+
+            credentials {
+                def uName = ""
+                def passwd = ""
+                int r
+                def stream = new FileInputStream(orTempFile(".credentials/sonatype-username.cred"))
+                while ((r = stream.read()) != -1) uName = (uName + (char) r)
+                stream = new FileInputStream(orTempFile(".credentials/sonatype-password.cred"))
+                while ((r = stream.read()) != -1) passwd = (passwd + (char) r)
+
+                username uName
+                password passwd
+            }
+        }
+    }
+
+    publications {
+        mavenJava(MavenPublication) {
+            artifactId = 'kalutils'
+            from components.java
+
+            artifact sourcesJar
+
+            pom {
+                name = "KaleidoxUtils"
+                description = "Utilities for Kaleidox projects"
+                inceptionYear = '2018'
+
+                licenses {
+                    license {
+                        name = 'The Apache License, Version 2.0'
+                        url = 'http://www.apache.org/licenses/LICENSE-2.0.txt'
+                    }
+                }
+
+                developers {
+                    developer {
+                        id = "burdoto"
+                        name = "Tobias Burdow"
+                        email = "burdoto@outlook.com"
+                    }
+                }
+
+                withXml {
+                    def xml = asNode()
+                    def repos = xml.appendNode("repositories")
+                    def repo = repos.appendNode("repository")
+                    repo.appendNode("id", "jitpack.io")
+                    repo.appendNode("url", "https://jitpack.io")
+                }
+            }
+        }
+    }
+}
+
+signing {
+    useGpgCmd()
+}
+
+static File orTempFile(String name) {
+    def file = new File(name)
+    if (!file.exists()) return File.createTempFile(name, "")
+    return file
+}
