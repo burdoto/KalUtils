@@ -19,9 +19,4 @@ public class CollectionHelper extends NullHelper {
             requireNoNull(x);
         }
     }
-
-    public static <T, C extends Collection<T>> C assure(C ptr, Supplier<C> supplier) {
-        if (ptr == null) ptr = supplier.get();
-        return ptr;
-    }
 }
