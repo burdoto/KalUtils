@@ -1,11 +1,11 @@
 package de.kaleidox.util.helpers;
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Objects;
+import java.util.function.Supplier;
 
 public class CollectionHelper extends NullHelper {
-    // Static members
-    // Static membe
     public static <T> Collection<T> requireNoNull(Collection<T> collection) {
         for (Object item : collection) {
             Objects.requireNonNull(item);
@@ -18,5 +18,10 @@ public class CollectionHelper extends NullHelper {
             Objects.requireNonNull(x);
             requireNoNull(x);
         }
+    }
+
+    public static <T, C extends Collection<T>> C assure(C ptr, Supplier<C> supplier) {
+        if (ptr == null) ptr = supplier.get();
+        return ptr;
     }
 }
