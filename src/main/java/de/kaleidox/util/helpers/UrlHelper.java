@@ -1,18 +1,11 @@
 package de.kaleidox.util.helpers;
 
-import de.kaleidox.util.annotations.Nullable;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
+import org.jetbrains.annotations.Nullable;
 
 public class UrlHelper extends NullHelper {
-    // Static Fields
-    public final static String BASE_IMAGE_URL = "https://cdn.discordapp.com/";
-
-    // Static membe
-
-    // Static members
-
     /**
      * Creates an URL from the given String. Returns {@code null} if the given String is null. Returns {@code null} and logs a {@link MalformedURLException} if
      * the URL is malformed.
