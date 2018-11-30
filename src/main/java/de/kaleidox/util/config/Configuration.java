@@ -21,13 +21,14 @@ import static de.kaleidox.util.helpers.JsonHelper.parseExceptional;
 public class Configuration extends Hashtable<String, Configuration.ConfigNode> {
     public final static String BASE_PATH = "config/";
 
-    public Configuration(String name) throws IOException {
+    public Configuration(String name) {
         super();
         File file = new File(BASE_PATH + name);
 
-        if (!file.exists())
-            file.createNewFile();
-        readFile(file);
+        try {
+            if (!file.exists()) file.createNewFile();
+            readFile(file);
+        } catch (IOException ignored) {}
     }
 
     public Configuration register(@Grouping Object... vars) throws IllegalArgumentException {
@@ -35,11 +36,7 @@ public class Configuration extends Hashtable<String, Configuration.ConfigNode> {
         List<List<Object>> groups = ListHelper.everyOfList(2, Arrays.asList(vars));
         Hashtable<String, ConfigNode> table = new Hashtable<>();
         for (List<Object> group : groups) table.put(group.get(0).toString(), new ConfigNode(group.get(1)));
-        return register(table);
-    }
-
-    public Configuration register(Hashtable<String, ConfigNode> vars) {
-        putAll(vars);
+        putAll(table);
         return this;
     }
 
