@@ -1,9 +1,10 @@
 package de.kaleidox.util.helpers;
 
+import org.jetbrains.annotations.Nullable;
+
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.util.Objects;
-import org.jetbrains.annotations.Nullable;
 
 public class UrlHelper extends NullHelper {
     /**

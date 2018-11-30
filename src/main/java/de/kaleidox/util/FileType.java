@@ -1,7 +1,8 @@
 package de.kaleidox.util;
 
-import java.io.File;
 import org.intellij.lang.annotations.Language;
+
+import java.io.File;
 
 public abstract class FileType {
     private final String vanityName;

@@ -1,13 +1,15 @@
 package de.kaleidox.util.serializer;
 
+import org.jetbrains.annotations.Nullable;
+
 import de.kaleidox.util.functional.DoubleFunction;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
-import org.jetbrains.annotations.Nullable;
 
 public class SelectedPropertiesMapper<K, V> extends PropertiesMapper<K, V> implements Iterable<V> {
     final K key;

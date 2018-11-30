@@ -1,6 +1,7 @@
 package de.kaleidox.util.functional;
 
 import de.kaleidox.util.serializer.PropertiesMapper;
+
 import java.util.function.Function;
 
 /**

@@ -1,6 +1,7 @@
 package de.kaleidox.util.helpers;
 
 import de.kaleidox.util.Difference;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;

@@ -3,6 +3,7 @@ package de.kaleidox.util.interfaces;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.JsonSerializable;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
 import de.kaleidox.util.helpers.JsonHelper;
 
 /**

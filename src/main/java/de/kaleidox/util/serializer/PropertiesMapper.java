@@ -1,7 +1,10 @@
 package de.kaleidox.util.serializer;
 
+import org.jetbrains.annotations.Nullable;
+
 import de.kaleidox.util.functional.DoubleFunction;
 import de.kaleidox.util.toolchains.CustomCollectors;
+
 import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -14,7 +17,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
-import org.jetbrains.annotations.Nullable;
 
 /**
  * This class represents a PropertiesMapper, which can be used to store things in a {@code .properties} File.

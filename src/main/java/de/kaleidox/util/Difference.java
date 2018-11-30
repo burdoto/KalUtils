@@ -1,6 +1,7 @@
 package de.kaleidox.util;
 
 import de.kaleidox.util.functional.Evaluation;
+
 import java.util.ArrayList;
 import java.util.List;
 
