@@ -5,7 +5,10 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+
+import de.kaleidox.util.exception.IllegalTypeException;
 import de.kaleidox.util.interfaces.JsonNodeable;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -38,6 +41,23 @@ public final class JsonHelper extends NullHelper {
             return JsonNodeFactory.instance.booleanNode((Boolean) of);
         } else {
             return JsonNodeFactory.instance.textNode(of.toString());
+        }
+    }
+
+    public static Object ofNode(JsonNode field) {
+        switch (field.getNodeType()) {
+            case NULL:
+                return null;
+            case NUMBER:
+                field.numberValue();
+            case STRING:
+                return field.textValue();
+            case BOOLEAN:
+                return field.booleanValue();
+            case MISSING:
+                return null;
+            default:
+                throw new IllegalTypeException(field.getNodeType().toString());
         }
     }
 
@@ -79,5 +99,9 @@ public final class JsonHelper extends NullHelper {
         } catch (IOException e) {
             return objectNode();
         }
+    }
+
+    public static JsonNode parseExceptional(String body) throws IOException {
+        return new ObjectMapper().readTree(body);
     }
 }
