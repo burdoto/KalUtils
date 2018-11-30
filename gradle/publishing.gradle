@@ -8,6 +8,8 @@ publishing {
             def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             url = project.version.endsWith("SNAPSHOT") ? snapshotsRepoUrl : releasesRepoUrl
             name = "Sonatype"
+            
+            println "Publishing to $name [$url]..."
 
             credentials {
                 def uName = ""
@@ -30,6 +32,7 @@ publishing {
             from components.java
 
             artifact sourcesJar
+            artifact javadocJar
 
             pom {
                 name = "KaleidoxUtils"
@@ -50,14 +53,6 @@ publishing {
                         email = "burdoto@outlook.com"
                     }
                 }
-
-                withXml {
-                    def xml = asNode()
-                    def repos = xml.appendNode("repositories")
-                    def repo = repos.appendNode("repository")
-                    repo.appendNode("id", "jitpack.io")
-                    repo.appendNode("url", "https://jitpack.io")
-                }
             }
         }
     }
@@ -65,6 +60,8 @@ publishing {
 
 signing {
     useGpgCmd()
+    //noinspection GroovyAssignabilityCheck -> false negative
+    sign publishing.publications.mavenJava
 }
 
 static File orTempFile(String name) {

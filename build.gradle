@@ -1,7 +1,7 @@
 apply plugin: 'java-library'
 
 group 'de.kaleidox'
-version '1.0.0-SNAPSHOT'
+version '0.3.1-SNAPSHOT'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -14,6 +14,16 @@ task wrapper(type: Wrapper) {
 task sourcesJar(type: Jar) {
     from sourceSets.main.allJava
     classifier = "sources"
+}
+
+task javadocJar(type: Jar) {
+    javadoc
+    from javadoc.destinationDir
+    classifier = "javadoc"
+}
+
+compileJava {
+    options.encoding = 'UTF-8'
 }
 
 repositories {
@@ -34,4 +44,13 @@ sourceSets {
             srcDirs = ["src\\main\\java"]
         }
     }
+}
+
+if (!isTravis()) {
+    apply from: 'gradle/publishing.gradle'
+}
+
+// utility method to decide whether we are on a travis ci machine
+static boolean isTravis() {
+    return System.getenv().containsKey("TRAVIS")
 }
