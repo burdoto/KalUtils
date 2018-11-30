@@ -1,5 +1,6 @@
-package de.kaleidox.util.serializer;
+package de.kaleidox.util.functional;
 
+import de.kaleidox.util.serializer.PropertiesMapper;
 import java.util.function.Function;
 
 /**
@@ -9,14 +10,12 @@ import java.util.function.Function;
  * @param <In>  The input type of the Function.
  * @param <Out> The output type of the Function.
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class DoubleFunction<In, Out> {
-    public final static DoubleFunction<String, Object> STRING_OBJECT_DOUBLE_FUNCTION = new DoubleFunction<>(a -> a, Object::toString);
-    public final static DoubleFunction<String, String> STRING_STRING_DOUBLE_FUNCTION = new DoubleFunction<>(a -> a, b -> b);
-    public final static DoubleFunction<String, Integer> STRING_INTEGER_DOUBLE_FUNCTION = new DoubleFunction<>(Integer::parseInt, String::valueOf);
-    public final static DoubleFunction<String, Long> STRING_LONG_DOUBLE_FUNCTION = new DoubleFunction<>(Long::parseLong, String::valueOf);
-    public final static DoubleFunction<String, Double> STRING_DOUBLE_DOUBLE_FUNCTION = new DoubleFunction<>(Double::parseDouble, String::valueOf);
-    public final static DoubleFunction<String, Float> STRING_FLOAT_DOUBLE_FUNCTION = new DoubleFunction<>(Float::parseFloat, String::valueOf);
+    public final static DoubleFunction<String, Object> STRING_OBJECT = new DoubleFunction<>(a -> a, Object::toString);
+    public final static DoubleFunction<String, Integer> STRING_INTEGER = new DoubleFunction<>(Integer::parseInt, String::valueOf);
+    public final static DoubleFunction<String, Long> STRING_LONG = new DoubleFunction<>(Long::parseLong, String::valueOf);
+    public final static DoubleFunction<String, Double> STRING_DOUBLE = new DoubleFunction<>(Double::parseDouble, String::valueOf);
+    public final static DoubleFunction<String, Float> STRING_FLOAT = new DoubleFunction<>(Float::parseFloat, String::valueOf);
 
     private final Function<In, Out> inputFunction;
     private final Function<Out, In> outputFunction;
@@ -52,5 +51,9 @@ public class DoubleFunction<In, Out> {
      */
     public In toInput(Out item) {
         return outputFunction.apply(item);
+    }
+
+    public static <T> DoubleFunction<T, T> identity() {
+        return new DoubleFunction<>(a -> a, b -> b);
     }
 }

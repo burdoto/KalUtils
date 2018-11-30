@@ -1,5 +1,6 @@
 package de.kaleidox.util.serializer;
 
+import de.kaleidox.util.functional.DoubleFunction;
 import de.kaleidox.util.toolchains.CustomCollectors;
 
 import java.io.File;
