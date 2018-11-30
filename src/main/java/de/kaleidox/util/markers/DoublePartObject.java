@@ -1,4 +1,4 @@
-package de.kaleidox.util.objects.markers;
+package de.kaleidox.util.markers;
 
 public class DoublePartObject<A, B> {
     private A partA;
@@ -9,15 +9,15 @@ public class DoublePartObject<A, B> {
         partB = b;
     }
 
-    public static <A, B> DoublePartObject<A, B> of(A a, B b) {
-        return new DoublePartObject<>(a, b);
-    }
-
     public A getA() {
         return partA;
     }
 
     public B getB() {
         return partB;
+    }
+
+    public static <A, B> DoublePartObject<A, B> of(A a, B b) {
+        return new DoublePartObject<>(a, b);
     }
 }

@@ -1,6 +1,5 @@
 package de.kaleidox.util.helpers;
 
-import java.util.Collection;
 import java.util.Objects;
 import java.util.function.Supplier;
 

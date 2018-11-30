@@ -1,6 +1,12 @@
-package de.kaleidox.util.objects;
+package de.kaleidox.util;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.EnumSet;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import java.util.function.BiConsumer;
 import java.util.function.BinaryOperator;
 import java.util.function.Function;
@@ -8,7 +14,6 @@ import java.util.function.Supplier;
 import java.util.stream.Collector;
 
 public class CustomCollectors {
-    // Static Fields
     public static final Set<Collector.Characteristics> CH_ID = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.IDENTITY_FINISH));
     public static final Set<Collector.Characteristics> CH_NOID = Collections.emptySet();
     static final Set<Collector.Characteristics> CH_CONCURRENT_ID = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.CONCURRENT,
@@ -19,8 +24,6 @@ public class CustomCollectors {
     static final Set<Collector.Characteristics> CH_UNORDERED_ID = Collections.unmodifiableSet(EnumSet.of(Collector.Characteristics.UNORDERED,
             Collector.Characteristics.IDENTITY_FINISH));
 
-    // Static membe
-    // Static members
     public static <T> Collector<Collection<T>, Collection<T>, ArrayList<T>> collectionMerge() {
         return new CustomCollectorImpl<>(ArrayList::new, Collection::addAll, (left, right) -> {
             left.addAll(right);
@@ -70,19 +73,14 @@ public class CustomCollectors {
             this(supplier, accumulator, combiner, castingIdentity(), characteristics);
         }
 
-        @SuppressWarnings("unchecked")
-        private static <I, R> Function<I, R> castingIdentity() {
-            return i -> (R) i;
+        @Override
+        public Supplier<A> supplier() {
+            return supplier;
         }
 
         @Override
         public BiConsumer<A, T> accumulator() {
             return accumulator;
-        }
-
-        @Override
-        public Supplier<A> supplier() {
-            return supplier;
         }
 
         @Override
@@ -98,6 +96,11 @@ public class CustomCollectors {
         @Override
         public Set<Characteristics> characteristics() {
             return characteristics;
+        }
+
+        @SuppressWarnings("unchecked")
+        private static <I, R> Function<I, R> castingIdentity() {
+            return i -> (R) i;
         }
     }
 }

@@ -9,7 +9,6 @@ import java.util.concurrent.ConcurrentHashMap;
 import java.util.function.Predicate;
 import org.jetbrains.annotations.Nullable;
 
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class SelectedPropertiesMapper<K, V> extends PropertiesMapper<K, V> implements Iterable<V> {
     final K key;
 
@@ -48,6 +47,18 @@ public class SelectedPropertiesMapper<K, V> extends PropertiesMapper<K, V> imple
      */
     public IOPort<ConcurrentHashMap<String, String>, Map<String, String>> getIoPort() {
         return ioPort;
+    }
+
+    /**
+     * Checks whether the given value is contained within the given key.
+     *
+     * @param value The value to check for.
+     * @return whether the value is contained within the given key.
+     * @see ArrayList#contains(Object)
+     */
+    @Override
+    public boolean hasValue(V value) {
+        return get(key).contains(value);
     }
 
     /**
@@ -191,17 +202,5 @@ public class SelectedPropertiesMapper<K, V> extends PropertiesMapper<K, V> imple
      */
     public boolean setToCoordinates(int index, V value) {
         return setToCoordinates(key, index, value);
-    }
-
-    /**
-     * Checks whether the given value is contained within the given key.
-     *
-     * @param value The value to check for.
-     * @return whether the value is contained within the given key.
-     * @see ArrayList#contains(Object)
-     */
-    @Override
-    public boolean hasValue(V value) {
-        return get(key).contains(value);
     }
 }

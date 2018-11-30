@@ -1,4 +1,4 @@
-package de.kaleidox.util.objects.functional;
+package de.kaleidox.util.functional;
 
 import java.util.function.Consumer;
 import java.util.function.Predicate;
@@ -8,10 +8,8 @@ import java.util.function.Predicate;
  *
  * @param <T> The type variable value the result.
  */
-@SuppressWarnings({"WeakerAccess", "unused"})
 public class Evaluation<T> {
     private final T value;
-    private final Predicate<T> tester;
     private final boolean result;
 
     /**
@@ -22,21 +20,9 @@ public class Evaluation<T> {
      */
     public Evaluation(T of, Predicate<T> tester) {
         this.value = of;
-        this.tester = tester;
         this.result = tester.test(of);
     }
 
-    /**
-     * Creates a new Evaluation instance for a predefined boolean.
-     *
-     * @param bool The boolean to use for testing.
-     * @return The Evaluation instance.
-     */
-    public static Evaluation<Boolean> of(boolean bool) {
-        return new Evaluation<>(bool, n -> n);
-    }
-
-    // Override Methods
     @Override
     public String toString() {
         return "Evaluation [" + value.toString() + "; tested " + (result ? "TRUE" : "FALSE") + "]";
@@ -123,5 +109,15 @@ public class Evaluation<T> {
         boolean b = onSuccess(successAction);
         if (!b) failureAction.accept(value);
         return b;
+    }
+
+    /**
+     * Creates a new Evaluation instance for a predefined boolean.
+     *
+     * @param bool The boolean to use for testing.
+     * @return The Evaluation instance.
+     */
+    public static Evaluation<Boolean> of(boolean bool) {
+        return new Evaluation<>(bool, n -> n);
     }
 }

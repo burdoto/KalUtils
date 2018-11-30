@@ -1,4 +1,4 @@
-package de.kaleidox.util.objects.markers;
+package de.kaleidox.util.markers;
 
 /**
  * This class represents one item with name and Type T
@@ -20,7 +20,6 @@ public class NamedItem<T> {
         this.item = item;
     }
 
-    // Override Methods
     @Override
     public String toString() {
         return "NamedItem (" + name + " with item " + item.toString() + ")";

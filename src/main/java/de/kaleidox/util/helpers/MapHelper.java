@@ -1,6 +1,15 @@
 package de.kaleidox.util.helpers;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.TreeMap;
+import java.util.WeakHashMap;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.ConcurrentSkipListMap;
 import java.util.function.BiFunction;
@@ -32,9 +41,8 @@ public class MapHelper extends NullHelper {
      * @see Map#containsKey(Object)
      */
     public static <K, V> boolean containsKey(Map<K, V> map, K key) {
-        return map.entrySet()
+        return map.keySet()
                 .stream()
-                .map(Map.Entry::getKey)
                 .anyMatch(check -> check.equals(key));
     }
 
@@ -49,9 +57,8 @@ public class MapHelper extends NullHelper {
      * @see Map#containsValue(Object)
      */
     public static <K, V> boolean containsValue(Map<K, V> map, V value) {
-        return map.entrySet()
+        return map.values()
                 .stream()
-                .map(Map.Entry::getValue)
                 .anyMatch(check -> check.equals(value));
     }
 
@@ -67,9 +74,8 @@ public class MapHelper extends NullHelper {
      * @return Whether the map contains a key that can be mapped to the value.
      */
     public static <K, V, T> boolean containsKey(Map<K, V> map, T value, Function<K, T> extractor) {
-        return map.entrySet()
+        return map.keySet()
                 .stream()
-                .map(Map.Entry::getKey)
                 .map(extractor)
                 .anyMatch(t -> t.equals(value));
     }
@@ -86,25 +92,22 @@ public class MapHelper extends NullHelper {
      * @return Whether the map contains a key that can be mapped to the value.
      */
     public static <K, V, T> boolean containsValue(Map<K, V> map, T value, Function<V, T> extractor) {
-        return map.entrySet()
+        return map.values()
                 .stream()
-                .map(Map.Entry::getValue)
                 .map(extractor)
                 .anyMatch(t -> t.equals(value));
     }
 
     public static <K, V> int countKeyOccurrences(Map<K, V> map, K key) {
-        return Math.toIntExact(map.entrySet()
+        return Math.toIntExact(map.keySet()
                 .stream()
-                .map(Map.Entry::getKey)
                 .filter(check -> check.equals(key))
                 .count());
     }
 
     public static <K, V> int countValueOccurrences(Map<K, V> map, V value) {
-        return Math.toIntExact(map.entrySet()
+        return Math.toIntExact(map.values()
                 .stream()
-                .map(Map.Entry::getValue)
                 .filter(check -> check.equals(value))
                 .count());
     }
@@ -266,6 +269,8 @@ public class MapHelper extends NullHelper {
         return newMap;
     }
 
+    // TODO: 30.11.2018 Rework this
+
     /**
      * Creates a new parented map of the type of {@code inputMap} and injects it into {@code outputMap}. This way, methods like {@link #reformat(Map, Function,
      * Function)} can always return the correct map type. The class of {@code inputMap} should always equal the class of the returned {@code outputMap}, given
@@ -282,7 +287,6 @@ public class MapHelper extends NullHelper {
      * @param <oV>      Output map Value type.
      * @return The newly created {@code [PARENT]Map<oK, oV>}, casted down to {@link Map}.
      */
-    @SuppressWarnings("ParameterCanBeLocal")
     private static <iK, iV, oK, oV> Map<oK, oV> getMapOfParent(Map<iK, iV> inputMap, Map<oK, oV> outputMap) {
         Objects.requireNonNull(outputMap);
         if (inputMap instanceof ConcurrentHashMap) {

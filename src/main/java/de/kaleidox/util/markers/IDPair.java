@@ -1,4 +1,4 @@
-package de.kaleidox.util.objects.markers;
+package de.kaleidox.util.markers;
 
 public class IDPair {
     private final long one;
@@ -9,15 +9,15 @@ public class IDPair {
         this.two = two;
     }
 
-    public static IDPair of(long one, long two) {
-        return new IDPair(one, two);
-    }
-
     public long getOne() {
         return one;
     }
 
     public long getTwo() {
         return two;
+    }
+
+    public static IDPair of(long one, long two) {
+        return new IDPair(one, two);
     }
 }

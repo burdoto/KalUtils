@@ -1,4 +1,4 @@
-package de.kaleidox.util.objects.functional;
+package de.kaleidox.util.functional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -6,7 +6,6 @@ import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
 
 public class LivingInt {
-    // Static Fields
     public final static long MILLIS_MINIMUM = 20;
     private final int stopAt;
     private final int stepSize;

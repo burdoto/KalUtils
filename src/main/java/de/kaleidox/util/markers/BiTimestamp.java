@@ -1,7 +1,6 @@
-package de.kaleidox.util.objects.markers;
+package de.kaleidox.util.markers;
 
 import com.fasterxml.jackson.databind.JsonNode;
-
 import java.time.Duration;
 import java.time.Instant;
 import java.util.Objects;

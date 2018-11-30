@@ -1,4 +1,4 @@
-package de.kaleidox.util.objects.functional;
+package de.kaleidox.util.functional;
 
 import java.util.ArrayList;
 import java.util.List;

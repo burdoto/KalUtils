@@ -19,7 +19,6 @@ import java.util.function.Supplier;
  * @param <R> The Item type to be supplied by the reader.
  * @param <W> The Item type to be consumed by the writer.
  */
-@SuppressWarnings({"unused", "WeakerAccess"})
 public class IOPort<R, W> {
     private Supplier<R> reader;
     private Consumer<W> writer;
@@ -33,6 +32,39 @@ public class IOPort<R, W> {
     public IOPort(Supplier<R> reader, Consumer<W> writer) {
         this.reader = reader;
         this.writer = writer;
+    }
+
+    /**
+     * Returns the content obtained by the reader; accords to {@code <R>}.
+     *
+     * @return The content of the reader.
+     */
+    public R read() {
+        return reader.get();
+    }
+
+    /**
+     * Reads the content of the reader as a collection; splitting by the regex defined in {@code splitWith}.
+     *
+     * @param supplier  A supplier to provide a list to fill.
+     * @param splitWith A regex to split the content apart.
+     * @return A collection that contains the split items.
+     */
+    public <T extends Collection<String>> Collection<String> readAsCollection(Supplier<T> supplier, String splitWith) {
+        return new ArrayList<>(Arrays.asList(
+                reader
+                        .get()
+                        .toString()
+                        .split(splitWith)));
+    }
+
+    /**
+     * Writes the given item to the file.
+     *
+     * @param item The item to write.
+     */
+    public void write(W item) {
+        writer.accept(item);
     }
 
     /**
@@ -71,38 +103,5 @@ public class IOPort<R, W> {
                     }
                 }
         );
-    }
-
-    /**
-     * Returns the content obtained by the reader; accords to {@code <R>}.
-     *
-     * @return The content of the reader.
-     */
-    public R read() {
-        return reader.get();
-    }
-
-    /**
-     * Reads the content of the reader as a collection; splitting by the regex defined in {@code splitWith}.
-     *
-     * @param supplier  A supplier to provide a list to fill.
-     * @param splitWith A regex to split the content apart.
-     * @return A collection that contains the split items.
-     */
-    public <T extends Collection<String>> Collection<String> readAsCollection(Supplier<T> supplier, String splitWith) {
-        return new ArrayList<>(Arrays.asList(
-                reader
-                        .get()
-                        .toString()
-                        .split(splitWith)));
-    }
-
-    /**
-     * Writes the given item to the file.
-     *
-     * @param item The item to write.
-     */
-    public void write(W item) {
-        writer.accept(item);
     }
 }

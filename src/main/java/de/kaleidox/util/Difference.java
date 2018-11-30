@@ -1,6 +1,6 @@
-package de.kaleidox.util.objects;
+package de.kaleidox.util;
 
-import de.kaleidox.util.objects.functional.Evaluation;
+import de.kaleidox.util.functional.Evaluation;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,12 +11,6 @@ public class Difference<T> {
     private Difference(List<T> added, List<T> removed) {
         this.added = added;
         this.removed = removed;
-    }
-
-    // Static members
-    // Static membe
-    public static <T> Difference<T> of(List<T> added, List<T> removed) {
-        return new Difference<>(added, removed);
     }
 
     public List<T> getAdded() {
@@ -33,6 +27,10 @@ public class Difference<T> {
 
     public Evaluation<Boolean> hasRemoved() {
         return Evaluation.of(!removed.isEmpty());
+    }
+
+    public static <T> Difference<T> of(List<T> added, List<T> removed) {
+        return new Difference<>(added, removed);
     }
 
     public static class Builder<A> {

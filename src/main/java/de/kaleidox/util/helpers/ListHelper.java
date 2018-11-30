@@ -1,8 +1,8 @@
 package de.kaleidox.util.helpers;
 
-import de.kaleidox.util.objects.Difference;
-
+import de.kaleidox.util.Difference;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Objects;
 import java.util.Optional;
@@ -116,7 +116,6 @@ public class ListHelper extends CollectionHelper {
         return matches == a.size();
     }
 
-    @SuppressWarnings("BooleanMethodIsAlwaysInverted")
     public static <T> boolean containsEquals(List<T> list, T item) {
         requireNoNull(list);
         for (T x : list) {
@@ -139,12 +138,9 @@ public class ListHelper extends CollectionHelper {
         return difBuilder.build();
     }
 
-    @SuppressWarnings({"UseBulkOperation", "ManualArrayToCollectionCopy"})
     public static <T> List<T> of(T[] data) {
         List<T> list = new ArrayList<>();
-        for (T t : data) {
-            list.add(t);
-        }
+        Collections.addAll(list, data);
         return list;
     }
 }

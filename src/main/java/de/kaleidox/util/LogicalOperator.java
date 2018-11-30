@@ -1,4 +1,4 @@
-package de.kaleidox.util.objects;
+package de.kaleidox.util;
 
 import java.util.Collection;
 import java.util.Optional;
@@ -17,15 +17,6 @@ public enum LogicalOperator {
         this.name = name;
     }
 
-    // Static members
-    // Static membe
-    public static Optional<LogicalOperator> find(String tag) {
-        return Stream.of(values())
-                .filter(lo -> lo.name.equalsIgnoreCase(tag))
-                .findAny();
-    }
-
-    // Override Methods
     @Override
     public String toString() {
         return "LogicalOperator (" + name + ")";
@@ -55,5 +46,11 @@ public enum LogicalOperator {
 
     public String getName() {
         return name;
+    }
+
+    public static Optional<LogicalOperator> find(String tag) {
+        return Stream.of(values())
+                .filter(lo -> lo.name.equalsIgnoreCase(tag))
+                .findAny();
     }
 }

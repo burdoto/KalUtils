@@ -5,7 +5,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
-
 import de.kaleidox.util.interfaces.JsonNodeable;
 import java.io.IOException;
 import java.util.Collection;
@@ -14,9 +13,8 @@ import java.util.Objects;
 import java.util.function.Function;
 import java.util.stream.Stream;
 
-@SuppressWarnings("FinalStaticMethod")
 public final class JsonHelper extends NullHelper {
-    public final static JsonNode nodeOf(Object of) {
+    public static JsonNode nodeOf(Object of) {
         if (of == null) {
             return JsonNodeFactory.instance.nullNode();
         } else if (of instanceof JsonNode) {
@@ -43,26 +41,26 @@ public final class JsonHelper extends NullHelper {
         }
     }
 
-    public final static <T, N> ArrayNode arrayNode(List<T> items, Function<T, N> mapper) {
+    public static <T, N> ArrayNode arrayNode(List<T> items, Function<T, N> mapper) {
         ArrayNode node = JsonNodeFactory.instance.arrayNode(items.size());
         for (T item : items) node.add(nodeOf(mapper.apply(item)));
         return node;
     }
 
-    public final static <T> ArrayNode arrayNode(Collection<T> items) {
+    public static <T> ArrayNode arrayNode(Collection<T> items) {
         ArrayNode node = JsonNodeFactory.instance.arrayNode(items.size());
         for (T item : items) node.add(nodeOf(item));
         return node;
     }
 
-    public final static ArrayNode arrayNode(Object... items) {
+    public static ArrayNode arrayNode(Object... items) {
         ArrayNode node = JsonNodeFactory.instance.arrayNode(items.length);
         for (Object item : items)
             node.add(nodeOf(item));
         return node;
     }
 
-    public final static ObjectNode objectNode(Object... data) {
+    public static ObjectNode objectNode(Object... data) {
         if (data.length == 0) return JsonNodeFactory.instance.objectNode();
         if (data.length % 2 != 0)
             throw new IllegalArgumentException("You must provide an even amount of objects to be placed in the node.");
@@ -75,7 +73,7 @@ public final class JsonHelper extends NullHelper {
         return objectNode;
     }
 
-    public final static JsonNode parse(String body) {
+    public static JsonNode parse(String body) {
         try {
             return new ObjectMapper().readTree(body);
         } catch (IOException e) {

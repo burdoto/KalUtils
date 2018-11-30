@@ -60,14 +60,6 @@ public class CustomCollectors {
                 CH_ID);
     }
 
-    /**
-     * Merges a stream of Collections into one larger Collection.
-     *
-     * @param collectionSupplier
-     * @param <T>
-     * @param <L>
-     * @return A CustomCollector to collect items into a Collection.
-     */
     public static <T, L extends Collection<T>> Collector<Collection<T>, L, L> collectionMerge(Supplier<L> collectionSupplier) {
         return new CustomCollectorImpl<>(
                 collectionSupplier,
@@ -132,18 +124,14 @@ public class CustomCollectors {
             this(supplier, accumulator, combiner, castingIdentity(), characteristics);
         }
 
-        private static <I, R> Function<I, R> castingIdentity() {
-            return i -> (R) i;
+        @Override
+        public Supplier<A> supplier() {
+            return supplier;
         }
 
         @Override
         public BiConsumer<A, T> accumulator() {
             return accumulator;
-        }
-
-        @Override
-        public Supplier<A> supplier() {
-            return supplier;
         }
 
         @Override
@@ -159,6 +147,10 @@ public class CustomCollectors {
         @Override
         public Set<Characteristics> characteristics() {
             return characteristics;
+        }
+
+        private static <I, R> Function<I, R> castingIdentity() {
+            return i -> (R) i;
         }
     }
 }
