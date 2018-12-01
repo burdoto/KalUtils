@@ -127,16 +127,7 @@ public class ListHelper extends CollectionHelper {
 
     public static <T> Difference<T> getDifference(List<T> source, List<T> target) {
         nullChecks(source, target);
-        Difference.Builder<T> difBuilder = new Difference.Builder<>();
-
-        for (T x : source) {
-            if (!containsEquals(target, x)) difBuilder.addAdded(x);
-        }
-        for (T x : target) {
-            if (!containsEquals(source, x)) difBuilder.addRemoved(x);
-        }
-
-        return difBuilder.build();
+        return Difference.of(source, target);
     }
 
     public static <T> List<T> of(T[] data) {

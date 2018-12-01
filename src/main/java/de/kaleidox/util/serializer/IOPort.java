@@ -2,8 +2,12 @@ package de.kaleidox.util.serializer;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.FilterInputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
@@ -74,13 +78,29 @@ public class IOPort<R, W> {
      * @return An IO Port to be used by a {@link PropertiesMapper}.
      */
     public static IOPort<ConcurrentHashMap<String, String>, Map<String, String>> mapPort(File file) {
+        try {
+            return mapPort(new FileInputStream(file), new FileOutputStream(file));
+        } catch (FileNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    /**
+     * Poses a fitting IO Port for a {@link PropertiesMapper}.
+     *
+     * @param iStream The inputStream to read from.
+     * @param oStream The outputStream to write to.
+     * @return An IO Port to be used by a {@link PropertiesMapper}.
+     */
+    public static IOPort<ConcurrentHashMap<String, String>, Map<String, String>> mapPort(InputStream iStream,
+                                                                                         OutputStream oStream) {
         return new IOPort<>(
                 () -> {
                     Properties props = new Properties();
                     ConcurrentHashMap<String, String> map = new ConcurrentHashMap<>();
 
                     try {
-                        props.load(new FileInputStream(file.getPath()));
+                        props.load(iStream);
                     } catch (IOException e2) {
                         e2.printStackTrace();
                     }
@@ -97,7 +117,7 @@ public class IOPort<R, W> {
                     }
 
                     try {
-                        props.store(new FileOutputStream(file.getPath()), null);
+                        props.store(oStream, null);
                     } catch (IOException e) {
                         e.printStackTrace();
                     }

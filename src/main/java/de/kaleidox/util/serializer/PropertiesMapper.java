@@ -71,8 +71,6 @@ public class PropertiesMapper<K, V> extends ConcurrentHashMap<K, List<V>> implem
         reloadFromFile();
     }
 
-    // Getter Methods
-
     /**
      * Gets the splitter character.
      *

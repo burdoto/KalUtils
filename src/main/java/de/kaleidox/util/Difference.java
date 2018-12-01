@@ -1,6 +1,7 @@
 package de.kaleidox.util;
 
 import de.kaleidox.util.functional.Evaluation;
+import de.kaleidox.util.helpers.ListHelper;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -22,6 +23,10 @@ public class Difference<T> {
         return Evaluation.of(!added.isEmpty());
     }
 
+    public Evaluation<Boolean> hasAdded(T obj) {
+        return Evaluation.of(added.contains(obj));
+    }
+
     public List<T> getRemoved() {
         return removed;
     }
@@ -30,29 +35,38 @@ public class Difference<T> {
         return Evaluation.of(!removed.isEmpty());
     }
 
-    public static <T> Difference<T> of(List<T> added, List<T> removed) {
-        return new Difference<>(added, removed);
+    public Evaluation<Boolean> hasRemoved(T obj) {
+        return Evaluation.of(removed.contains(obj));
     }
 
-    public static class Builder<A> {
-        private final List<A> added;
-        private final List<A> removed;
+    public static <T> Difference<T> of(List<T> original, List<T> changed) {
+        class Builder<A> {
+            private final List<A> added;
+            private final List<A> removed;
 
-        public Builder() {
-            added = new ArrayList<>();
-            removed = new ArrayList<>();
+            Builder() {
+                added = new ArrayList<>();
+                removed = new ArrayList<>();
+            }
+
+            void addAdded(A item) {
+                added.add(item);
+            }
+
+            void addRemoved(A item) {
+                removed.add(item);
+            }
+
+            Difference<A> build() {
+                return new Difference<>(added, removed);
+            }
         }
 
-        public void addAdded(A item) {
-            added.add(item);
-        }
+        Builder<T> builder = new Builder<>();
 
-        public void addRemoved(A item) {
-            removed.add(item);
-        }
+        for (T t : original) if (!ListHelper.containsEquals(changed, t)) builder.addRemoved(t);
+        for (T t : changed) if (!ListHelper.containsEquals(original, t)) builder.addAdded(t);
 
-        public Difference<A> build() {
-            return new Difference<>(added, removed);
-        }
+        return builder.build();
     }
 }
