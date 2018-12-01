@@ -1,0 +1,11 @@
+{
+  "level": "warn",
+  "person": {
+    "age": 19,
+    "name": "Tobias",
+    "lang": {
+      "java": true,
+      "cpp": false
+    }
+  }
+}

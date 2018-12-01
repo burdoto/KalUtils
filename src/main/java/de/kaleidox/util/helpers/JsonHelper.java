@@ -6,7 +6,6 @@ import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.JsonNodeFactory;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 
-import de.kaleidox.util.exception.IllegalTypeException;
 import de.kaleidox.util.interfaces.JsonNodeable;
 
 import java.io.IOException;
@@ -44,21 +43,16 @@ public final class JsonHelper extends NullHelper {
         }
     }
 
-    public static Object ofNode(JsonNode field) {
-        switch (field.getNodeType()) {
-            case NULL:
-                return null;
-            case NUMBER:
-                field.numberValue();
-            case STRING:
-                return field.textValue();
-            case BOOLEAN:
-                return field.booleanValue();
-            case MISSING:
-                return null;
-            default:
-                throw new IllegalTypeException(field.getNodeType().toString());
-        }
+    public static Object ofNode(JsonNode f) {
+        Object r;
+        if (f.isTextual()) r = f.asText();
+        else if (f.isInt()) r = f.asInt();
+        else if (f.isLong()) r = f.asLong();
+        else if (f.isDouble()) r = f.asDouble();
+        else if (f.isFloat()) r = f.floatValue();
+        else if (f.isBoolean()) r = f.asBoolean();
+        else r = f.textValue();
+        return r;
     }
 
     public static <T, N> ArrayNode arrayNode(List<T> items, Function<T, N> mapper) {

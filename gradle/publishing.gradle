@@ -2,6 +2,8 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 
 publishing {
+    test
+    
     repositories {
         maven {
             def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
