@@ -32,10 +32,14 @@ public class CustomCollectors {
     }
 
     public static <T, L extends Collection<T>> Collector<Collection<T>, L, L> collectionMerge(Supplier<L> collectionSupplier) {
-        return new CustomCollectorImpl<>(collectionSupplier, Collection::addAll, (left, right) -> {
-            left.addAll(right);
-            return left;
-        }, CH_ID);
+        return new CustomCollectorImpl<>(
+                collectionSupplier,
+                Collection::addAll,
+                (left, right) -> {
+                    left.addAll(right);
+                    return left;
+                    },
+                CH_ID);
     }
 
     /**

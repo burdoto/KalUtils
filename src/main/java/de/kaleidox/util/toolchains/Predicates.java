@@ -15,4 +15,6 @@ public final class Predicates {
             return true;
         }
     };
+
+    public static final Predicate<Boolean> IDENTITY = bool -> bool;
 }

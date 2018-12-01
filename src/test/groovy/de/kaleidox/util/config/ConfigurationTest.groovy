@@ -1,6 +1,6 @@
-package de.kaleidox.util.tests.config
+package de.kaleidox.util.config
 
-import de.kaleidox.util.config.Configuration
+
 import org.junit.Before
 import org.junit.Test
 
