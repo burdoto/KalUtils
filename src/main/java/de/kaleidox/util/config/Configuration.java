@@ -3,17 +3,14 @@ package de.kaleidox.util.config;
 import com.fasterxml.jackson.core.JsonPointer;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import de.kaleidox.util.annotations.Grouping;
-import de.kaleidox.util.helpers.ListHelper;
-
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.Arrays;
+import java.io.InputStream;
 import java.util.Hashtable;
 import java.util.Iterator;
-import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.function.Function;
 
 import static de.kaleidox.util.helpers.JsonHelper.ofNode;
 import static de.kaleidox.util.helpers.JsonHelper.parseExceptional;
@@ -26,33 +23,45 @@ public class Configuration extends Hashtable<String, Configuration.ConfigNode> {
         File file = new File(BASE_PATH + name);
 
         try {
-            if (!file.exists()) file.createNewFile();
-            readFile(file);
-        } catch (IOException ignored) {}
+            InputStream resStream = ClassLoader.getSystemResourceAsStream(BASE_PATH + name);
+            if (resStream != null) readFile(resStream);
+            else {
+                if (!file.exists()) file.createNewFile();
+                readFile(new FileInputStream(file));
+            }
+        } catch (IOException ignored) {
+        }
     }
 
-    public Configuration register(@Grouping Object... vars) throws IllegalArgumentException {
-        if (vars.length % 2 != 0) throw new IllegalArgumentException("Illegal amount of arguments!");
-        List<List<Object>> groups = ListHelper.everyOfList(2, Arrays.asList(vars));
-        Hashtable<String, ConfigNode> table = new Hashtable<>();
-        for (List<Object> group : groups) table.put(group.get(0).toString(), new ConfigNode(group.get(1)));
-        putAll(table);
+    public Configuration register(String varName, Object value) {
+        return register(varName, value, Function.identity());
+    }
+
+    public <T> Configuration register(String varName, T value, Function<Object, T> mapper) {
+        if (containsKey(varName)) {
+            ConfigNode node = get(varName);
+            node.def = value;
+            node.mapper = mapper;
+        } else put(varName, new ConfigNode(value, mapper));
         return this;
     }
 
-    public Object get(String varName) throws NoSuchElementException {
-        return get(varName, Object.class);
+    public String var(String varName) throws NoSuchElementException {
+        return var(varName, Object.class).toString();
     }
 
-    public <V> V get(String varName, Class<V> as) throws NoSuchElementException, ClassCastException {
-        if (contains(varName)) {
-            Object o = get((Object) varName).get();
-            return as.cast(o);
+    public <V> V var(String varName, Class<V> as) throws NoSuchElementException, ClassCastException {
+        return as.cast(getRaw(varName));
+    }
+
+    private Object getRaw(String varName) throws NoSuchElementException {
+        if (containsKey(varName)) {
+            ConfigNode configNode = get(varName);
+            return configNode.mapper.apply(configNode.get());
         } else throw new NoSuchElementException("Variable not found: " + varName);
     }
 
-    private void readFile(File file) throws IOException, IllegalArgumentException {
-        FileInputStream stream = new FileInputStream(file);
+    private void readFile(InputStream stream) throws IOException, IllegalArgumentException {
         int r;
         StringBuilder sb = new StringBuilder();
         while ((r = stream.read()) != -1) sb.append((char) r);
@@ -66,10 +75,14 @@ public class Configuration extends Hashtable<String, Configuration.ConfigNode> {
         while (fields.hasNext()) {
             final String name = fields.next();
             final JsonNode field = node.path(name);
-            final String path = String.format("%s.%s", underlying, name);
+            final String path = String.format("%s%s%s", underlying, underlying.equals("") ? "" : ".", name);
 
             if (field.isObject()) dissolveNode(field, path);
-            else get((Object) path).actual(ofNode(field));
+            else {
+                Object ofNode = ofNode(field);
+                if (!containsKey(path)) put(path, new ConfigNode(ofNode, Function.identity()));
+                else throw new AssertionError();
+            }
         }
     }
 
@@ -78,23 +91,24 @@ public class Configuration extends Hashtable<String, Configuration.ConfigNode> {
     }
 
     protected class ConfigNode {
-        private final Object def;
-        private Object act;
+        protected final Object act;
+        protected Object def;
+        protected Function<Object, ?> mapper;
         private boolean lock = false;
 
-        private ConfigNode(Object def) {
-            this.def = def;
+        private ConfigNode(Object act, Function<Object, ?> mapper) {
+            this.act = act;
+            this.mapper = mapper;
         }
 
-        private void actual(Object act) {
+        private void def(Object def) {
             if (lock) throw new IllegalAccessError("Node has been locked!");
-            this.act = act;
+            this.def = def;
             lock = true;
         }
 
         private Object get() {
-            if (act == null) return def;
-            return act;
+            return act == null ? def : act;
         }
     }
 }
