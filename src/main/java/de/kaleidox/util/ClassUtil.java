@@ -1,10 +1,10 @@
-package de.kaleidox.util.helpers;
+package de.kaleidox.util;
 
 import org.jetbrains.annotations.Nullable;
 
 import java.lang.reflect.Field;
 
-public class ClassUtils {
+public class ClassUtil {
     /**
      * Extracts a field from a class or any of its superclasses; if possible, and casts the value to T.
      *

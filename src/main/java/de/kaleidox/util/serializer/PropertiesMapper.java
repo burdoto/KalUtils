@@ -6,6 +6,7 @@ import de.kaleidox.util.functional.DoubleFunction;
 import de.kaleidox.util.toolchains.CustomCollectors;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.HashMap;
@@ -14,7 +15,9 @@ import java.util.List;
 import java.util.Map;
 import java.util.Spliterator;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.function.BiFunction;
 import java.util.function.Consumer;
+import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
@@ -344,6 +347,26 @@ public class PropertiesMapper<K, V> extends ConcurrentHashMap<K, List<V>> implem
         return remove;
     }
 
+    public V replace(K key, int index, V value) {
+        return get(key).set(index, value);
+    }
+
+    public V compute(K key, int index, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        return get(key).set(index, remappingFunction.apply(key, get(key).get(index)));
+    }
+
+    public V computeIfAbsent(K key, int index, Function<? super K, ? extends V> mappingFunction) {
+        if (!containsKey(key))
+            return get(key).set(index, mappingFunction.apply(key));
+        else return null;
+    }
+
+    public V computeIfPresent(K key, int index, BiFunction<? super K, ? super V, ? extends V> remappingFunction) {
+        if (containsKey(key))
+            return get(key).set(index, remappingFunction.apply(key, get(key).get(index)));
+        else return null;
+    }
+
     /**
      * Removes a value from a specific key.
      *
@@ -481,5 +504,12 @@ public class PropertiesMapper<K, V> extends ConcurrentHashMap<K, List<V>> implem
     @Override
     public Spliterator<V> spliterator() {
         throw new UnsupportedOperationException("Spliterators not implemented yet.");
+    }
+
+    @SuppressWarnings("FinalStaticMethod")
+    public final static File getOrCreateProperties(String name) throws IOException {
+        File file = new File("config/" + name + ".properties");
+        if (!file.exists()) file.createNewFile();
+        return file;
     }
 }
