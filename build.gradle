@@ -1,8 +1,15 @@
+buildscript {
+    repositories.gradlePluginPortal()
+    dependencies.classpath "io.codearte.gradle.nexus:gradle-nexus-staging-plugin:0.20.0"
+}
+
 apply plugin: 'java-library'
 apply plugin: 'groovy'
 
 group 'de.kaleidox'
-version '0.4.1'
+version '0.4.2-SNAPSHOT'
+
+apply from: 'gradle/vars.gradle'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
@@ -55,11 +62,4 @@ sourceSets {
     }
 }
 
-if (!isTravis()) {
-    apply from: 'gradle/publishing.gradle'
-}
-
-// utility method to decide whether we are on a travis ci machine
-static boolean isTravis() {
-    return System.getenv().containsKey("TRAVIS")
-}
+apply from: 'gradle/publishing.gradle'
