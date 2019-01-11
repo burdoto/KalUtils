@@ -1,0 +1,8 @@
+import static java.lang.System.getenv
+
+ext {
+    snapshot = project.version.endsWith("-SNAPSHOT")
+    
+    sonatypeUsername = getenv("sonatypeUsername")
+    sonatypePassword = getenv("sonatypePassword")
+}
