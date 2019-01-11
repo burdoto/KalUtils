@@ -30,36 +30,22 @@ task javadocJar(type: Jar) {
     classifier = "javadoc"
 }
 
-compileJava {
-    options.encoding = 'UTF-8'
-}
-
-repositories {
-    jcenter()
-}
+compileJava.options.encoding = 'UTF-8'
+repositories.jcenter()
 
 dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
     implementation 'com.vdurmont:emoji-java:4.0.0'
-    compileOnly 'com.intellij:annotations:12.0'
+    
+    implementation 'com.intellij:annotations:12.0'
 
     testImplementation 'junit:junit:4.12'
     testCompile 'org.codehaus.groovy:groovy-all:2.4.14'
 }
 
 sourceSets {
-    main {
-        java {
-            srcDirs = ["src\\main\\java"]
-        }
-    }
-    
-    test {
-        groovy {
-            //noinspection GroovyAssignabilityCheck -> false negative
-            srcDirs = ["src\\test\\groovy"]
-        }
-    }
+    main.java.srcDirs = ["src\\main\\java"]
+    test.groovy.srcDirs = ["src\\test\\groovy"]
 }
 
 apply from: 'gradle/publishing.gradle'

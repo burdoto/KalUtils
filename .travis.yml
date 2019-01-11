@@ -1,12 +1,10 @@
 language: java
 sudo: true
-
 jdk:
-  - oraclejdk8
-
+- oraclejdk8
 script:
-  - ./gradlew -v
-  - ./gradlew clean test
-
+- "./gradlew -v"
+- "./gradlew clean test"
 before_install:
-  - openssl aes-256-cbc -K $encrypted_0a6446eb3ae3_key -iv $encrypted_0a6446eb3ae3_iv -in SecretKey.gpg.enc -out GPGKey.gpg -d
+- openssl aes-256-cbc -K $encrypted_66f2f79405ef_key -iv $encrypted_66f2f79405ef_iv
+  -in GPGKey.gpg.enc -out GPGKey.gpg -d

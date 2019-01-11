@@ -3,9 +3,7 @@ apply plugin: 'signing'
 apply plugin: "io.codearte.nexus-staging"
 
 project.getGradle().getTaskGraph().whenReady {
-    tasks.withType(GenerateMavenPom.class) {
-        destination = file("$projectDir/pom.xml")
-    }
+    tasks.withType(GenerateMavenPom.class).destination = file("$projectDir/pom.xml")
 }
 
 publishing {
@@ -13,12 +11,10 @@ publishing {
 
     repositories {
         maven {
-            def snapshotsRepoUrl = "https://oss.sonatype.org/content/repositories/snapshots"
-            def releasesRepoUrl = "https://oss.sonatype.org/service/local/staging/deploy/maven2"
-            url = snapshot ? snapshotsRepoUrl : releasesRepoUrl
+            url = snapshot
+                    ? "https://oss.sonatype.org/content/repositories/snapshots"
+                    : "https://oss.sonatype.org/service/local/staging/deploy/maven2"
             name = "Sonatype"
-
-            println "Publishing to $name [$url]..."
 
             credentials {
                 username sonatypeUsername
@@ -61,11 +57,9 @@ publishing {
 
 signing {
     useGpgCmd()
-    //noinspection GroovyAssignabilityCheck -> false negative
     sign publishing.publications.mavenJava
 }
 
-// remove superfluous tasks from NexusStagingPlugin
 tasks.removeAll([promoteRepository, closeAndPromoteRepository, getStagingProfile])
 
 nexusStaging {
