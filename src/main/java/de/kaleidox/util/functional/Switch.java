@@ -28,7 +28,7 @@ public class Switch<T> {
     public void test(T item) {
         boolean needDefault = true;
         for (Case kase : cases) {
-            if (checker.apply(item, kase.item)) {
+            if (checker.apply(kase.item, item)) {
                 needDefault = false;
                 kase.executor.accept(item);
             }
