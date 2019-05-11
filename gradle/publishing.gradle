@@ -2,13 +2,7 @@ apply plugin: 'maven-publish'
 apply plugin: 'signing'
 apply plugin: "io.codearte.nexus-staging"
 
-project.getGradle().getTaskGraph().whenReady {
-    tasks.withType(GenerateMavenPom.class).destination = file("$projectDir/pom.xml")
-}
-
 publishing {
-    test
-
     repositories {
         maven {
             url = snapshot
@@ -35,6 +29,7 @@ publishing {
                 name = "KaleidoxUtils"
                 description = "Utilities for Kaleidox projects"
                 inceptionYear = '2018'
+                url = 'https://github.com/burdoto/KalUtils'
 
                 licenses {
                     license {
@@ -49,6 +44,12 @@ publishing {
                         name = "Tobias Burdow"
                         email = "burdoto@outlook.com"
                     }
+                }
+
+                scm {
+                    connection = 'scm:git:git://github.com/burdoto/KalUtils.git'
+                    developerConnection = 'scm:git:ssh://github.com/burdoto/KalUtils.git'
+                    url = 'https://github.com/burdoto/KalUtils'
                 }
             }
         }
