@@ -35,7 +35,7 @@ repositories.jcenter()
 
 dependencies {
     implementation 'com.fasterxml.jackson.core:jackson-databind:2.9.8'
-    implementation 'com.vdurmont:emoji-java:4.0.0'
+    implementation 'com.vdurmont:emoji-java:5.0.0'
     
     implementation 'com.intellij:annotations:12.0'
 
